@@ -13,10 +13,21 @@ class App extends Component {
     //The super keyword is used to call functions on an object's parent.
     super(props);
 
-    this.state = { videos: []};
+    this.state = {
+      videos: [],
+      selectedVideo: null,
+    };
 
-    ytSearch({key: API_KEY, term: 'surfboards'}, (videos) => {
-      this.setState({ videos });
+    this.videoSearch('surfboards');
+  }
+
+  //this is a method on the App class that we can pass into the SearchBar component
+  videoSearch(term){
+    ytSearch({key: API_KEY, term: term}, (videos) => {
+      this.setState({
+        videos: videos,
+        selectedVideo: videos[0],
+      });
       //ES6 syntax: this.setState({videos: videos}), works when key and prop are same name
     });
   }
@@ -24,9 +35,12 @@ class App extends Component {
   render(){
     return (
       <div>
-        <SearchBar />
-        <VideoDetail video={this.state.videos[0]} />
-        <VideoList videos={this.state.videos} />
+        <SearchBar onSearchTermChange={term => this.videoSearch(term)} />
+        <VideoDetail video={this.state.selectedVideo} />
+        <VideoList
+          onVideoSelect={selectedVideo => this.setState({selectedVideo}) }
+          //defined fn that takes video that updates app's state w/ new video, if VideoList calls this fn, selected video on App updates, this is a property of VideoList
+          videos={this.state.videos} />
       </div>
     );
   }
