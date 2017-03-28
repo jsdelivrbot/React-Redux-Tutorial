@@ -15,6 +15,7 @@ class App extends Component {
     //The super keyword is used to call functions on an object's parent.
     super(props);
 
+    //this is a component level state that only belongs to this component
     this.state = {
       videos: [],
       selectedVideo: null,
