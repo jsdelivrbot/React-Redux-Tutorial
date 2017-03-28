@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { Component } from 'react'; //dep
 import ReactDOM from 'react-dom'; //dep
 import ytSearch from 'youtube-api-search'; //dep
@@ -8,6 +9,7 @@ import VideoDetail from './components/video-detail';
 const API_KEY = 'AIzaSyA5iBAoKE4IXylbiskEqHOdFX8uxMfQUik';
 
 //create a new component. This component should produce some HTML
+//a class is used when we want to have conept of state in component
 class App extends Component {
   constructor(props) {
     //The super keyword is used to call functions on an object's parent.
@@ -33,9 +35,14 @@ class App extends Component {
   }
 
   render(){
+    const videoSearch = _.debounce((term) => {
+      this.videoSearch(term); //debounce takes this function and only calls it every 300 ms
+      //basically says, "You can only trigger search term every 300 ms"
+    }, 300);
+
     return (
       <div>
-        <SearchBar onSearchTermChange={term => this.videoSearch(term)} />
+        <SearchBar onSearchTermChange={videoSearch} />
         <VideoDetail video={this.state.selectedVideo} />
         <VideoList
           onVideoSelect={selectedVideo => this.setState({selectedVideo}) }
